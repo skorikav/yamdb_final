@@ -1,128 +1,73 @@
-# Yamdb API
+# API_YamDB
 
-### Yamdb - reviews resource
+REST API для сервиса YaMDb — базы отзывов о фильмах, книгах и музыке.
 
-##### Description
+Проект YaMDb собирает отзывы пользователей на произведения. Произведения делятся на категории: «Книги», «Фильмы», «Музыка». Произведению может быть присвоен жанр. Новые жанры может создавать только администратор. Читатели оставляют к произведениям текстовые отзывы и выставляют произведению рейтинг (оценку в диапазоне от одного до десяти). Из множества оценок автоматически высчитывается средняя оценка произведения.
 
+Аутентификация по JWT-токену
 
-The YaMDb project collects reviews (Review) of users on works (Titles). The works are divided into categories: "Books", "Films", "Music". The list of categories (Category) can be expanded by the administrator (for example, you can add the category "Fine Arts" or "Jewellery").
+Поддерживает методы GET, POST, PUT, PATCH, DELETE
 
-##### Technologies
+Предоставляет данные в формате JSON
 
-- Python 3.7
-- Django 2.2.19
-- Django REST framework
+Cоздан в команде из трёх человек с использованим Git в рамках учебного курса Яндекс.Практикум.
 
-### How to run the project:
+### Стек технологий
 
-Clone repository and go to it's derictory on your computer:
-```
-git clone https://github.com/loverazz/api_yamdb.git
-```
-```
-cd api_yamdb
-```
+- проект написан на Python с использованием Django REST Framework
+- библиотека Simple JWT - работа с JWT-токеном
+- библиотека django-filter - фильтрация запросов
+- базы данных - SQLite3
+- система управления версиями - git
 
-Create and activate virtual environment:
+### Ресурсы API YaMDb
 
-```
-python -m venv env
-```
-```
-source env/bin/activate
-```
-```
-python -m pip install --upgrade pip
-```
+AUTH: аутентификация.
 
-Install the requirements from requirements.txt:
-```
-pip install -r requirements.txt
-```
+USERS: пользователи.
 
-Migrate:
-```
-python manage.py migrate
-```
+TITLES: произведения, к которым пишут отзывы (определённый фильм, книга или песенка).
 
-Run the project:
-```
-python manage.py runserver
-```
+CATEGORIES: категории (типы) произведений ("Фильмы", "Книги", "Музыка").
 
-### Available endpoints
+GENRES: жанры произведений. Одно произведение может быть привязано к нескольким жанрам.
 
-#### Registration
+REVIEWS: отзывы на произведения. Отзыв привязан к определённому произведению.
 
-Sign up:
+COMMENTS: комментарии к отзывам. Комментарий привязан к определённому отзыву.
 
-`api/v1/auth/signup/`
+### Алгоритм регистрации пользователей
 
-Getting a token:
+Пользователь отправляет POST-запрос с параметром email на /api/v1/auth/email/. YaMDB отправляет письмо с кодом подтверждения (confirmation_code) на адрес email. Пользователь отправляет POST-запрос с параметрами email и confirmation_code на /api/v1/auth/token/, в ответе на запрос ему приходит token (JWT-токен). Эти операции выполняются один раз, при регистрации пользователя. В результате пользователь получает токен и может работать с API, отправляя этот токен с каждым запросом.
 
-`api/v1/auth/token/`
+### Пользовательские роли
 
-#### Categories
+Аноним — может просматривать описания произведений, читать отзывы и комментарии.
 
-All categories:
+Аутентифицированный пользователь (user) — может читать всё, как и Аноним, дополнительно может публиковать отзывы и ставить рейтинг произведениям (фильмам/книгам/песенкам), может комментировать чужие отзывы и ставить им оценки; может редактировать и удалять свои отзывы и комментарии.
 
-`api/v1/categories/`
+Модератор (moderator) — те же права, что и у Аутентифицированного пользователя плюс право удалять и редактировать любые отзывы и комментарии.
 
-#### Genres
+Администратор (admin) — полные права на управление проектом и всем его содержимым. Может создавать и удалять произведения, категории и жанры. Может назначать роли пользователям.
 
-All genres:
+Администратор Django — те же права, что и у роли Администратор.
 
-`api/v1/genres/`
+### Установка
 
-#### Titles
+Склонируйте репозиторий. Находясь в папке с кодом создайте виртуальное окружение python -m venv venv, активируйте его (Windows: source venv\scripts\activate; Linux/Mac: source venv/bin/activate), установите зависимости python -m pip install -r requirements.txt.
 
-All titles:
+### Запуск проекта
 
-`api/v1/titles/`
+Перейдите в папку проекта и выполните команду:
 
-Title's details:
+docker-compose up -d --build
+При первом запуске для функционирования проекта выполните команды:
 
-`api/v1/titles/{title_id}/`
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py createsuperuser
+docker-compose exec web python manage.py collectstatic --no-input
+Заполните базу начальными данными
 
-#### Reviews
+docker-compose exec web python manage.py loaddata fixtures.json
 
-All reviews:
-
-`api/v1/titles/{title_id}/reviews/`
-
-Reviews' details:
-
-`api/v1/titles/{title_id}/reviews/{review_id}/`
-
-#### Comments
-
-All reviews' comments:
-
-`api/v1/titles/{title_id}/reviews/{review_id}/comments/`
-
-Comment details:
-
-`api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/`
-
-#### Users
-
-All users:
-
-`api/v1/users/`
-
-User's details:
-
-`api/v1/users/{username}/`
-
-Your details:
-
-`api/v1/users/me/`
-
-
-### Authors
-
-1. Auth/Users - Kseniya Nivnya
-2. Categories/Genres/Titles - Elina Anastasia
-3. Review/Comments - Kashtanov Nikolai
-
-Moscow, 2022
+После запуска проекта, подробную инструкцию можно будет посмотреть по адресу http://127.0.0.1:8000/redoc/ .
