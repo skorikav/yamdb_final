@@ -1,3 +1,5 @@
+![This is an image](https://github.com/skorikav/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+
 # API_YamDB
 
 REST API для сервиса YaMDb — базы отзывов о фильмах, книгах и музыке.
