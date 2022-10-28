@@ -64,7 +64,7 @@ jobs:
           script: |
             sudo docker-compose stop
             sudo docker container rm infra_web_1
-            sudo docker rmi $(sudo docker images ${{ secrets.DOCKER_USERNAME }}/yamdb:latest -a -q)
+            sudo docker rmi $(sudo docker images ${{ secrets.DOCKER_USERNAME }}/yamdb -a -q)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/yamdb
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
