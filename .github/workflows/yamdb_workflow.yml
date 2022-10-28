@@ -63,7 +63,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/yamdb
-            sudo docker stop
+            containerIds=$(docker ps -a -q)
+            if [[ -n $containerIds ]] ; then
+              sudo docker stop $containerIds
             sudo docker-compose rm web
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
