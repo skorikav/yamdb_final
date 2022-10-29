@@ -1,5 +1,6 @@
 ![This is an image](https://github.com/skorikav/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 
+Проект доступен по адресу http://130.193.40.226/admin/
 # API_YamDB
 
 REST API для сервиса YaMDb — базы отзывов о фильмах, книгах и музыке.
